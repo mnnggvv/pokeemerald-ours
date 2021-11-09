@@ -15,6 +15,7 @@ MossdeepCity_OnTransition:
 	clearflag FLAG_MOSSDEEP_GYM_SWITCH_3
 	clearflag FLAG_MOSSDEEP_GYM_SWITCH_4
 	call_if_set FLAG_SYS_WEATHER_CTRL, Common_EventScript_SetAbnormalWeather
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 MossdeepCity_EventScript_PokefanF::

@@ -12,6 +12,7 @@ LilycoveCity_OnTransition:
 	setflag FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER
 	call_if_set FLAG_SYS_WEATHER_CTRL, Common_EventScript_SetAbnormalWeather
 	call Common_EventScript_SetupRivalGfxId
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 LilycoveCity_OnLoad:

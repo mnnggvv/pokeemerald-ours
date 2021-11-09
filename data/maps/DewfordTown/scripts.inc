@@ -16,6 +16,7 @@ DewfordTown_MapScripts::
 
 DewfordTown_OnTransition:
 	setflag FLAG_VISITED_DEWFORD_TOWN
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 DewfordTown_EventScript_Briney::
@@ -219,6 +220,16 @@ DewfordTown_Movement_SailToPetalburg:
 	walk_fast_up
 	walk_fast_up
 	walk_fast_up
+    walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
 	walk_fast_up
 	walk_fast_up
 	walk_fast_up
@@ -373,8 +384,8 @@ DewfordTown_Movement_SailToPetalburg:
 	walk_fastest_left
 	walk_fastest_left
 	walk_fastest_left
-	walk_fast_left
-	walk_fast_left
+	walk_fastest_left
+	walk_fastest_left
 	walk_fast_up
 	walk_fast_up
 	walk_fastest_up
@@ -391,8 +402,8 @@ DewfordTown_Movement_SailToPetalburg:
 	walk_fastest_up
 	walk_fastest_up
 	walk_fastest_up
-	walk_fast_up
-	walk_fast_up
+	walk_fastest_up
+	walk_fastest_up
 	walk_fast_up
 	walk_fast_up
 	walk_up
@@ -405,6 +416,11 @@ DewfordTown_Movement_SailToSlateport:
 	walk_right
 	walk_fast_right
 	walk_fast_right
+	walk_fastest_right
+	walk_fastest_right
+	walk_fastest_right
+	walk_fastest_right
+	walk_fastest_right
 	walk_fastest_right
 	walk_fastest_right
 	walk_fastest_right

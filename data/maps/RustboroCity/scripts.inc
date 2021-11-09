@@ -18,6 +18,7 @@ RustboroCity_OnTransition:
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
 	compare VAR_RUSTBORO_CITY_STATE, 6
 	goto_if_eq RustboroCity_EventScript_PositionScientistForExit
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 RustboroCity_EventScript_PositionScientistForExit::

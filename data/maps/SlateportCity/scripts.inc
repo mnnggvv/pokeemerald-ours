@@ -31,6 +31,7 @@ SlateportCity_OnTransition:
 	call_if_eq SlateportCity_EventScript_MovePeopleForSternInterview
 	compare VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1
 	call_if_eq SlateportCity_EventScript_SetReadyForScottScene
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_EndDoubleBattles
 	end
 
 SlateportCity_EventScript_EnterSlateport::

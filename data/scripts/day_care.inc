@@ -301,6 +301,14 @@ EventScript_EggHatch::
 	releaseall
 	end
 
+Common_EventScript_ForceDoubleBattles::
+    setflag FLAG_FORCE_DOUBLE_WILD_BATTLE
+    return
+
+Common_EventScript_EndDoubleBattles::
+    clearflag FLAG_FORCE_DOUBLE_WILD_BATTLE
+    return
+
 Route117_Text_SeeWifeIfYoudLikeMeToRaiseMon:
 	.string "I'm the DAY-CARE MAN.\p"
 	.string "I help take care of the precious\n"

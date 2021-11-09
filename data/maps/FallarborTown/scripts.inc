@@ -6,6 +6,7 @@ FallarborTown_OnTransition:
 	setflag FLAG_VISITED_FALLARBOR_TOWN
 	setvar VAR_CONTEST_HALL_STATE, 0
 	clearflag FLAG_CONTEST_SKETCH_CREATED
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 FallarborTown_EventScript_ExpertM::

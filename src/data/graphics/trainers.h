@@ -277,6 +277,15 @@ const u32 gTrainerPalette_RubySapphireBrendan[] = INCBIN_U32("graphics/trainers/
 const u32 gTrainerFrontPic_RubySapphireMay[] = INCBIN_U32("graphics/trainers/front_pics/ruby_sapphire_may_front_pic.4bpp.lz");
 const u32 gTrainerPalette_RubySapphireMay[] = INCBIN_U32("graphics/trainers/palettes/ruby_sapphire_may.gbapal.lz");
 
+const u32 gTrainerFrontPic_thug_f[] = INCBIN_U32("graphics/trainers/front_pics/thug_f_front_pic.4bpp.lz");
+const u32 gTrainerPalette_thugf[] = INCBIN_U32("graphics/trainers/palettes/thug_f.gbapal.lz");
+
+const u32 gTrainerFrontPic_thug_m[] = INCBIN_U32("graphics/trainers/front_pics/thug_m.4bpp.lz");
+const u32 gTrainerPalette_thugm[] = INCBIN_U32("graphics/trainers/palettes/thug_m.gbapal.lz");
+
+const u32 gTrainerFrontPic_Idol[] = INCBIN_U32("graphics/trainers/front_pics/Idol_front_pic.4bpp.lz");
+const u32 gTrainerPalette_Idol[] = INCBIN_U32("graphics/trainers/palettes/Idol.gbapal.lz");
+
 const u8 gTrainerBackPic_Brendan[] = INCBIN_U8("graphics/trainers/back_pics/brendan_back_pic.4bpp");
 const u8 gTrainerBackPic_May[] = INCBIN_U8("graphics/trainers/back_pics/may_back_pic.4bpp");
 const u8 gTrainerBackPic_Red[] = INCBIN_U8("graphics/trainers/back_pics/red_back_pic.4bpp");

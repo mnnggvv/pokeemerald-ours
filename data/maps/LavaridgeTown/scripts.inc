@@ -16,6 +16,7 @@ LavaridgeTown_OnTransition:
 	call_if_eq LavaridgeTown_EventScript_CheckSetRivalPos
 	compare VAR_LAVARIDGE_TOWN_STATE, 1
 	call_if_eq LavaridgeTown_EventScript_HideMapNamePopup
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 LavaridgeTown_EventScript_ClearLavaridgeWhiteOut::

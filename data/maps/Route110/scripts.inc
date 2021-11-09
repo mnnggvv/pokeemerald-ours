@@ -18,6 +18,7 @@ Route110_OnTransition:
 	call Common_EventScript_SetupRivalOnBikeGfxId
 	compare VAR_CYCLING_CHALLENGE_STATE, 1
 	call_if_eq Route110_EventScript_SaveCyclingMusic
+	call_if_unset FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 Route110_EventScript_SaveCyclingMusic::
@@ -285,6 +286,28 @@ Route110_EventScript_IsabelRegisterMatchCallAfterBattle::
 Route110_EventScript_IsabelRematch::
 	trainerbattle_rematch TRAINER_ISABEL_1, Route110_Text_IsabelRematchIntro, Route110_Text_IsabelRematchDefeated
 	msgbox Route110_Text_IsabelRematchPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route110_EventScript_Elliot::
+	trainerbattle_double TRAINER_ELLIOT_1, Route110_Text_ElliotIntro, Route110_Text_ElliotDefeated, Route110_Text_ElliotNotEnoughMons, Route110_EventScript_ElliotRegisterMatchCallAfterBattle
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	compare VAR_RESULT, TRUE
+	goto_if_eq Route110_EventScript_ElliotRematch
+	msgbox Route110_Text_ElliotPostBattle, MSGBOX_DEFAULT
+	release
+	end
+
+Route110_EventScript_ElliotRegisterMatchCallAfterBattle::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route110_Text_ElliotRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ELLIOT_1
+	release
+	end
+
+Route110_EventScript_ElliotRematch::
+	trainerbattle_rematch TRAINER_ELLIOT_1, Route110_Text_ElliotRematchIntro, Route110_Text_ElliotRematchDefeated
+	msgbox Route110_Text_ElliotRematchPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route110_EventScript_Timmy::

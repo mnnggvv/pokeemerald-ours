@@ -305,5 +305,7 @@
 #define B_WAIT_TIME_LONG  64
 #define B_WAIT_TIME_MED   48
 #define B_WAIT_TIME_SHORT 32
+#define WILD_DOUBLE_BATTLE ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER)))) 0
+bool8 throwingPokeBall;
 
 #endif // GUARD_CONSTANTS_BATTLE_H

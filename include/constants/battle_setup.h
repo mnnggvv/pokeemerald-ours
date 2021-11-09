@@ -15,4 +15,7 @@
 #define TRAINER_BATTLE_SET_TRAINER_B                    11
 #define TRAINER_BATTLE_HILL                             12
 
+#define B_DOUBLE_WILD_CHANCE                            90     // % chance of encountering two Pokémon in a Wild Encounter.
+#define B_FLAG_FORCE_DOUBLE_WILD    FLAG_FORCE_DOUBLE_WILD_BATTLE     // If this flag is set, all land and surfing wild battles will be double battles.                       0     // If this flag is set, all land and surfing wild battles will be double battles.
+
 #endif // GUARD_CONSTANTS_BATTLE_SETUP_H

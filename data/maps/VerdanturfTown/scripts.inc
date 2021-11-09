@@ -7,6 +7,7 @@ VerdanturfTown_MapScripts::
 VerdanturfTown_OnTransition:
 	setflag FLAG_VISITED_VERDANTURF_TOWN
 	setvar VAR_CONTEST_HALL_STATE, 0
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_EndDoubleBattles
 	end
 
 VerdanturfTown_EventScript_Twin::

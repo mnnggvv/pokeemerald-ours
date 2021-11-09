@@ -309,23 +309,25 @@ DewfordTown_Gym_Text_GymGuideAdvice:
 	.string "so be careful!\p"
 	.string "What's worse, the GYM is as dark as\n"
 	.string "the ocean floor.\p"
-	.string "But it will get brighter after defeating\n"
-	.string "the TRAINERS in your way.\p"
+	.string "But nobody here seems bothered by that.\n"
+	.string "I wonder why.\p"
 	.string "Hey, okay, go for it!$"
 
 DewfordTown_Gym_Text_GymGuidePostVictory:
-	.string "Whoah! It's turned too bright in here!\p"
-	.string "Your future is bright, too!$"
+	.string "Hey! Did you win? I can't see much\p"
+	.string "from here. Your future seems bright, tho!$"
 
 DewfordTown_Gym_Text_TakaoIntro:
-	.string "Might is right!\n"
-	.string "Come on!$"
+	.string "You might have figured out\n"
+	.string "the secret training that we edure\p"
+    .string "here, but you still have to\n"
+    .string "defeat me!$"
 
 DewfordTown_Gym_Text_TakaoDefeat:
-	.string "Not enough power…$"
+	.string "I can't see victory anymore…$"
 
 DewfordTown_Gym_Text_TakaoPostBattle:
-	.string "Your skill overcame my strength!\n"
+	.string "Your skill overcame mine!\n"
 	.string "Your technique is commendable!$"
 
 DewfordTown_Gym_Text_JocelynIntro:
@@ -345,18 +347,20 @@ DewfordTown_Gym_Text_JocelynPostBattle:
 	.string "CHAMPION!$"
 
 DewfordTown_Gym_Text_LauraIntro:
-	.string "Don't you dare brush me off!\n"
-	.string "It's not my fault if you cry!$"
+	.string "Hey! Do you feel lost in here?\n"
+	.string "If you can defeat me, I'll tell you\p"
+    .string "a little tip to train better\n"
+    .string "in the dark.$"
 
 DewfordTown_Gym_Text_LauraDefeat:
-	.string "Waaaaaaah!\n"
-	.string "I lost!$"
+	.string "I lost!\n"
+	.string "I can't believe it! OK, I'll tell you.$"
 
 DewfordTown_Gym_Text_LauraPostBattle:
-	.string "I battle in the dark to make my heart\n"
-	.string "stronger.\p"
-	.string "But because it's so dark, I can never\n"
-	.string "see BRAWLY's face…$"
+	.string "Do you think the lights turned on\n"
+	.string "a bit more now that you defeated me?\p"
+	.string "hehe…you're close to the truth\n"
+	.string "but you need to train more!$"
 
 DewfordTown_Gym_Text_LilithIntro:
 	.string "Ufufu…\n"
@@ -364,31 +368,32 @@ DewfordTown_Gym_Text_LilithIntro:
 
 DewfordTown_Gym_Text_LilithDefeat:
 	.string "Oh, you…\n"
-	.string "I don't want to know you!$"
+	.string "You figured it out!$"
 
 DewfordTown_Gym_Text_LilithPostBattle:
 	.string "You deserve to stay lost and end up\n"
 	.string "back at the entrance again!$"
 
 DewfordTown_Gym_Text_BrendenIntro:
-	.string "I'll show you the gumption of\n"
-	.string "a sailing man!$"
+	.string "I can recognize a lost trainer\n"
+	.string "when I see one!$"
 
 DewfordTown_Gym_Text_BrendenDefeat:
-	.string "How'd this happen?\n"
-	.string "It's not like me to lose this way!$"
+	.string "How can this be?\n"
+	.string "It was me who was lost!$"
 
 DewfordTown_Gym_Text_BrendenPostBattle:
 	.string "Oh, aye! You're worthy of seeing\n"
 	.string "our GYM LEADER.$"
 
 DewfordTown_Gym_Text_CristianIntro:
-	.string "If you mean to pass, it has to be\n"
-	.string "through me!$"
+	.string "If you can't understand our training\n"
+	.string "you'll never beat BRAWLY!$"
 
 DewfordTown_Gym_Text_CristianDefeat:
 	.string "Grrrrr!\n"
-	.string "Vastly overpowered!$"
+	.string "It seems your eyes are more\p"
+    .string "comfortable now after our battle.$"
 
 DewfordTown_Gym_Text_CristianPostBattle:
 	.string "You win!\n"
@@ -397,16 +402,21 @@ DewfordTown_Gym_Text_CristianPostBattle:
 DewfordTown_Gym_Text_BrawlyIntro:
 	.string "I'm BRAWLY!\n"
 	.string "DEWFORD's GYM LEADER!\p"
-	.string "I've been churned in the rough waves\n"
-	.string "of these parts, and I've grown tough\l"
-	.string "in the pitch-black cave!\p"
-	.string "So you wanted to challenge me?\n"
+	.string "I've grown tough\n"
+	.string "in the pitch-black cave.\p"
+	.string "So much that, after years of training\l"
+	.string "I teach others the way\n" 
+	.string "to overcome the darkness.\p"
+	.string "Let your eyes get used to it\n"
+    .string "and every room will seem brighter!\p"
+    .string "So you wanted to challenge me?\n"
 	.string "Let me see what you're made of!$"
 
 DewfordTown_Gym_Text_BrawlyDefeat:
-	.string "Whoah, wow! You made a much bigger\n"
-	.string "splash than I expected!\p"
-	.string "You swamped me!\p"
+	.string "Whoah, wow! Your strenght\n"
+	.string "is unbelievable!\p"
+	.string "I can feel that you understood\n"
+	.string "everything from the beginning.\p"
 	.string "Okay, you've got me.\n"
 	.string "Take this GYM BADGE!$"
 

@@ -6,6 +6,7 @@ Route117_MapScripts::
 
 Route117_OnTransition:
 	call Route117_EventScript_TryMoveDayCareMan
+	call_if_unset FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 Route117_EventScript_TryMoveDayCareMan::

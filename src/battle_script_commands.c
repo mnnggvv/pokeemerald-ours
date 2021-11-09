@@ -1734,7 +1734,11 @@ static void Cmd_attackanimation(void)
     if (gBattleControllerExecFlags)
         return;
 
-    if ((gHitMarker & HITMARKER_NO_ANIMATIONS) && (gCurrentMove != MOVE_TRANSFORM && gCurrentMove != MOVE_SUBSTITUTE))
+    if ((gHitMarker & HITMARKER_NO_ANIMATIONS)
+        && gCurrentMove != MOVE_TRANSFORM
+        && gCurrentMove != MOVE_SUBSTITUTE
+        // In a wild double battle gotta use the teleport animation if two wild pokemon are alive.
+        && !(gCurrentMove == MOVE_TELEPORT && WILD_DOUBLE_BATTLE && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))))
     {
         BattleScriptPush(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = BattleScript_Pausex20;
@@ -6267,6 +6271,21 @@ static void Cmd_various(void)
 
     switch (gBattlescriptCurrInstr[2])
     {
+        // Roar will fail in a double wild battle when used by the player against one of the two alive wild mons.
+    // Also when an opposing wild mon uses it againt its partner.
+    case VARIOUS_JUMP_IF_ROAR_FAILS:
+        if (WILD_DOUBLE_BATTLE
+            && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
+            && GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
+            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
+        else if (WILD_DOUBLE_BATTLE
+                 && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
+                 && GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT)
+            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
+        else
+            gBattlescriptCurrInstr += 7;
+        return;
     case VARIOUS_CANCEL_MULTI_TURN_MOVES:
         CancelMultiTurnMoves(gActiveBattler);
         break;
@@ -7138,7 +7157,19 @@ static void Cmd_forcerandomswitch(void)
     s32 validMons = 0;
     s32 minNeeded;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    // Swapping pokemon happens in:
+    // trainer battles
+    // wild double battles when an opposing pokemon uses it against one of the two alive player mons
+    // wild double battle when a player pokemon uses it against its partner
+    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        || (WILD_DOUBLE_BATTLE
+            && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
+            && GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER
+            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+        || (WILD_DOUBLE_BATTLE
+            && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
+            && GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
+       )
     {
         if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
             party = gPlayerParty;
@@ -7244,20 +7275,20 @@ static void Cmd_forcerandomswitch(void)
         }
         else
         {
-            if (TryDoForceSwitchOut())
+            *(gBattleStruct->field_58 + gBattlerTarget) = gBattlerPartyIndexes[gBattlerTarget];
+            gBattlescriptCurrInstr = BattleScript_RoarSuccessSwitch;
+
+            do
             {
-                do
-                {
-                    do
-                    {
-                        i = Random() % monsCount;
-                        i += firstMonId;
-                    }
-                    while (i == battler2PartyId || i == battler1PartyId);
-                } while (GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
-                       || GetMonData(&party[i], MON_DATA_IS_EGG) == TRUE
-                       || GetMonData(&party[i], MON_DATA_HP) == 0); //should be one while loop, but that doesn't match.
+                i = Random() % monsCount;
+                i += firstMonId;
             }
+            while (i == battler2PartyId
+                   || i == battler1PartyId
+                   || GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
+                   || GetMonData(&party[i], MON_DATA_IS_EGG) == TRUE
+                   || GetMonData(&party[i], MON_DATA_HP) == 0);
+
             *(gBattleStruct->monToSwitchIntoId + gBattlerTarget) = i;
 
             if (!IsMultiBattle())
@@ -7278,7 +7309,11 @@ static void Cmd_forcerandomswitch(void)
     }
     else
     {
-        TryDoForceSwitchOut();
+        // In normal wild doubles, Roar will always fail if the user's level is less than the target's.
+        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
+            gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
+        else
+            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
     }
 }
 

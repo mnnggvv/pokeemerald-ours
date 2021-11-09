@@ -2,8 +2,9 @@
 
 GraniteCave_StevensRoom_MapScripts::
 	.byte 0
-
 GraniteCave_StevensRoom_EventScript_Steven::
+    msgbox GraniteCave_StevensRoom_Text_Interesting, MSGBOX_DEFAULT
+	closemessage
 	lock
 	faceplayer
 	msgbox GraniteCave_StevensRoom_Text_ImStevenLetterForMe, MSGBOX_DEFAULT
@@ -45,13 +46,13 @@ GraniteCave_StevensRoom_EventScript_StevenExitNorth::
 
 GraniteCave_StevensRoom_EventScript_StevenExitWestEast::
 	applymovement OBJ_EVENT_ID_PLAYER, GraniteCave_StevensRoom_Movement_PlayerTurnTowardExit
-	applymovement LOCALID_STEVEN, GraniteCave_StevensRoom_Movement_StevenExit
+	applymovement LOCALID_STEVEN, GraniteCave_StevensRoom_Movement_StevenExitWestEast
 	waitmovement 0
 	return
 
 GraniteCave_StevensRoom_EventScript_StevenExitSouth::
 	applymovement OBJ_EVENT_ID_PLAYER, GraniteCave_StevensRoom_Movement_PlayerTurnTowardExit
-	applymovement LOCALID_STEVEN, GraniteCave_StevensRoom_Movement_StevenExitSouth
+	applymovement LOCALID_STEVEN, GraniteCave_StevensRoom_Movement_StevenExit
 	waitmovement 0
 	return
 
@@ -60,11 +61,14 @@ GraniteCave_StevensRoom_EventScript_BagFull::
 	return
 
 GraniteCave_StevensRoom_Movement_StevenExit:
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
+    walk_right
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_left
+	walk_down
+	walk_down
 	delay_8
 	step_end
 
@@ -75,22 +79,22 @@ GraniteCave_StevensRoom_Movement_PlayerTurnTowardExit:
 	walk_in_place_fastest_up
 	step_end
 
-GraniteCave_StevensRoom_Movement_StevenExitSouth:
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_up
-	walk_up
+GraniteCave_StevensRoom_Movement_StevenExitWestEast:
+    walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
 	delay_8
 	step_end
 
 GraniteCave_StevensRoom_Text_ImStevenLetterForMe:
-	.string "My name is STEVEN.\p"
+	.string "Oh! Hi, my name is STEVEN.\p"
 	.string "I'm interested in rare stones,\n"
 	.string "so I travel here and there.\p"
-	.string "Oh?\n"
+	.string "And you are?\n"
+    .string "…Oh?\p"
 	.string "A LETTER for me?$"
 
 GraniteCave_StevensRoom_Text_ThankYouTakeThis:
@@ -124,3 +128,7 @@ GraniteCave_StevensRoom_Text_OhBagIsFull:
 	.string "Oh, your BAG is full…\n"
 	.string "That's too bad, then.$"
 
+GraniteCave_StevensRoom_Text_Interesting:
+	.string "Hm… The super ancient POKéMON…\n"
+	.string "What terrible strenght…\p"
+	.string "…Mh?$"

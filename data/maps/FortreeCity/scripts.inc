@@ -5,6 +5,7 @@ FortreeCity_MapScripts::
 
 FortreeCity_OnTransition:
 	setflag FLAG_VISITED_FORTREE_CITY
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 FortreeCity_OnResume:

@@ -5,6 +5,7 @@ PacifidlogTown_MapScripts::
 
 PacifidlogTown_OnTransition:
 	setflag FLAG_VISITED_PACIFIDLOG_TOWN
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 PacifidlogTown_OnResume:

@@ -22,6 +22,7 @@
 #include "constants/layouts.h"
 #include "constants/maps.h"
 #include "constants/weather.h"
+#include "constants/battle_setup.h"
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -39,6 +40,8 @@ static bool8 IsAbilityAllowingEncounter(u8 level);
 // EWRAM vars
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
+EWRAM_DATA bool8 gIsFishingEncounter = 0;
+EWRAM_DATA bool8 gIsSurfingEncounter = 0;
 
 #include "data/wild_encounters.h"
 
@@ -582,7 +585,17 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
                 // try a regular wild land encounter
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    BattleSetup_StartWildBattle();
+                    if (TryDoDoubleWildBattle())
+                    {
+                        struct Pokemon mon1 = gEnemyParty[0];
+                        TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE);
+                        gEnemyParty[1] = mon1;
+                        BattleSetup_StartDoubleWildBattle();
+                    }
+                    else
+                    {
+                        BattleSetup_StartWildBattle();
+                    }
                     return TRUE;
                 }
 
@@ -614,7 +627,18 @@ bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavi
             {
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    BattleSetup_StartWildBattle();
+					gIsSurfingEncounter = TRUE;
+                    if (TryDoDoubleWildBattle())
+                    {
+                        struct Pokemon mon1 = gEnemyParty[0];
+                        TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_KEEN_EYE);
+                        gEnemyParty[1] = mon1;
+                        BattleSetup_StartDoubleWildBattle();
+                    }
+                    else
+                    {
+                        BattleSetup_StartWildBattle();
+                    }
                     return TRUE;
                 }
 
@@ -918,4 +942,15 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 {
     if (GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
         *encRate = *encRate * 2 / 3;
+}
+
+bool8 TryDoDoubleWildBattle(void)
+{
+    if (GetSafariZoneFlag() || GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS)
+        return FALSE;
+    #if B_DOUBLE_WILD_CHANCE != 0
+    else if (B_FLAG_FORCE_DOUBLE_WILD != 0 && FlagGet(B_FLAG_FORCE_DOUBLE_WILD) && (Random() % 100) + 1 < B_DOUBLE_WILD_CHANCE)
+        return TRUE;
+    #endif
+    return FALSE;
 }

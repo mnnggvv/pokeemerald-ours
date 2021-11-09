@@ -90,7 +90,41 @@ int main(int argc, char *argv[])
 
         return rawValue.substr(0, i);
     });
+env.add_callback("upperSnakeCase", 1, [](Arguments& args) {
+	string value = args.at(0)->get<string>();
+	if (value.empty())
+		return value;
 
+	string output;
+	output.push_back(std::toupper(value.front()));
+	for (size_t i = 1, e = value.size(); i != e; ++i) {
+		if (std::isupper(value[i]) || (!std::islower(value[i]) && std::isalpha(value[i - 1])))
+			output.push_back('_');
+		output.push_back(std::toupper(value[i]));
+	}
+	return output;
+});
+
+env.add_callback("add", 2, [](Arguments& args) {
+	int lhs = args.at(0)->get<int>();
+	int rhs = args.at(1)->get<int>();
+
+	return lhs + rhs;
+});
+
+env.add_callback("multiply", 2, [](Arguments& args) {
+	int lhs = args.at(0)->get<int>();
+	int rhs = args.at(1)->get<int>();
+
+	return lhs * rhs;
+});
+
+env.add_callback("divide", 2, [](Arguments& args) {
+	int lhs = args.at(0)->get<int>();
+	int rhs = args.at(1)->get<int>();
+
+	return lhs / rhs;
+});
     // single argument is a json object
     env.add_callback("isEmpty", 1, [](Arguments& args) {
         return args.at(0)->empty();

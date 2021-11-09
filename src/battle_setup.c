@@ -46,6 +46,7 @@
 #include "constants/maps.h"
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
+#include "constants/battle_setup.h"
 
 enum
 {
@@ -67,7 +68,7 @@ struct TrainerBattleParameter
 // this file's functions
 static void DoBattlePikeWildBattle(void);
 static void DoSafariBattle(void);
-static void DoStandardWildBattle(void);
+static void DoStandardWildBattle(bool32 isDouble);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
 static u8 GetWildBattleTransition(void);
@@ -387,7 +388,12 @@ void BattleSetup_StartWildBattle(void)
     if (GetSafariZoneFlag())
         DoSafariBattle();
     else
-        DoStandardWildBattle();
+        DoStandardWildBattle(FALSE);
+}
+
+void BattleSetup_StartDoubleWildBattle(void)
+{
+    DoStandardWildBattle(TRUE);
 }
 
 void BattleSetup_StartBattlePikeWildBattle(void)
@@ -395,13 +401,15 @@ void BattleSetup_StartBattlePikeWildBattle(void)
     DoBattlePikeWildBattle();
 }
 
-static void DoStandardWildBattle(void)
+static void DoStandardWildBattle(bool32 isDouble)
 {
     ScriptContext2_Enable();
     FreezeObjectEvents();
     sub_808BCF4();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
+    if (isDouble)
+        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
     if (InBattlePyramid())
     {
         VarSet(VAR_TEMP_E, 0);

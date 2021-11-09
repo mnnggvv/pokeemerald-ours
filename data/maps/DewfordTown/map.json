@@ -15,7 +15,7 @@
   "connections": [
     {
       "direction": "up",
-      "offset": -60,
+      "offset": -40,
       "map": "MAP_ROUTE106"
     },
     {
@@ -27,8 +27,8 @@
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
-      "x": 7,
-      "y": 12,
+      "x": 21,
+      "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
       "movement_range_x": 1,
@@ -40,7 +40,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
-      "x": 12,
+      "x": 32,
       "y": 9,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
@@ -53,8 +53,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FISHERMAN",
-      "x": 12,
-      "y": 14,
+      "x": 29,
+      "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
       "movement_range_x": 1,
@@ -66,7 +66,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MR_BRINEYS_BOAT",
-      "x": 12,
+      "x": 32,
       "y": 8,
       "elevation": 1,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -79,8 +79,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_1",
-      "x": 1,
-      "y": 6,
+      "x": 16,
+      "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -93,46 +93,48 @@
   ],
   "warp_events": [
     {
-      "x": 3,
+      "x": 18,
       "y": 3,
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_HALL",
       "dest_warp_id": 0
     },
     {
-      "x": 2,
-      "y": 10,
+      "x": 17,
+      "y": 13,
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_POKEMON_CENTER_1F",
       "dest_warp_id": 0
     },
     {
-      "x": 8,
-      "y": 17,
+      "x": 7,
+      "y": 4,
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_GYM",
       "dest_warp_id": 0
     },
     {
-      "x": 17,
-      "y": 14,
+      "x": 25,
+      "y": 3,
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_HOUSE1",
       "dest_warp_id": 0
     },
     {
-      "x": 8,
+      "x": 28,
       "y": 8,
       "elevation": 0,
       "dest_map": "MAP_DEWFORD_TOWN_HOUSE2",
       "dest_warp_id": 0
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+
+  ],
   "bg_events": [
     {
       "type": "sign",
-      "x": 10,
+      "x": 30,
       "y": 10,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
@@ -140,31 +142,31 @@
     },
     {
       "type": "sign",
-      "x": 11,
-      "y": 16,
+      "x": 10,
+      "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "DewfordTown_EventScript_GymSign"
     },
     {
       "type": "sign",
-      "x": 4,
-      "y": 10,
+      "x": 19,
+      "y": 13,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Common_EventScript_ShowPokemonCenterSign"
     },
     {
       "type": "sign",
-      "x": 3,
-      "y": 10,
+      "x": 18,
+      "y": 13,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Common_EventScript_ShowPokemonCenterSign"
     },
     {
       "type": "sign",
-      "x": 2,
+      "x": 17,
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",

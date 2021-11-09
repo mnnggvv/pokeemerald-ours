@@ -19,6 +19,7 @@ PetalburgCity_OnTransition:
 	call_if_eq PetalburgCity_EventScript_DisableMapNameAndMusic
 	compare VAR_PETALBURG_GYM_STATE, 8
 	call_if_eq PetalburgCity_EventScript_SetGymDoorsUnlocked
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 PetalburgCity_EventScript_MoveGymBoyToWestEntrance::

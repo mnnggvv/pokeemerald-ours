@@ -59,6 +59,7 @@ LittlerootTown_OnTransition:
 	call_if_eq LittlerootTown_EventScript_HideMapNamePopup
 	compare VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2
 	call_if_eq LittlerootTown_EventScript_LeftLabAfterDexUpgrade
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 LittlerootTown_EventScript_LeftLabAfterDexUpgrade::

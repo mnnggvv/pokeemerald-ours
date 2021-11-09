@@ -77,6 +77,7 @@ SootopolisCity_OnTransition:
 	call_if_eq SootopolisCity_EventScript_SetOutsideGymObjPos
 	compare VAR_SOOTOPOLIS_CITY_STATE, 6
 	call_if_eq SootopolisCity_EventScript_SetExpertBlockCaveEntrance
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 SootopolisCity_EventScript_HideMapNamePopup::

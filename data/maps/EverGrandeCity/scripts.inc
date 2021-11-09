@@ -4,6 +4,7 @@ EverGrandeCity_MapScripts::
 
 EverGrandeCity_OnTransition:
 	call_if_set FLAG_SYS_WEATHER_CTRL, Common_EventScript_SetAbnormalWeather
+	call_if_set FLAG_FORCE_DOUBLE_WILD_BATTLE, Common_EventScript_ForceDoubleBattles
 	end
 
 EverGrandeCity_EventScript_VictoryRoadSign::

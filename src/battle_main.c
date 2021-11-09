@@ -2611,18 +2611,24 @@ void SpriteCb_WildMon(struct Sprite *sprite)
 {
     sprite->callback = SpriteCb_MoveWildMonToRight;
     StartSpriteAnimIfDifferent(sprite, 0);
-    BeginNormalPaletteFade(0x20000, 0, 10, 10, RGB(8, 8, 8));
+    if (WILD_DOUBLE_BATTLE)
+        BeginNormalPaletteFade((0x10000 << sprite->sBattler) | (0x10000 << BATTLE_PARTNER(sprite->sBattler)), 0, 10, 10, RGB(8, 8, 8));
+    else
+        BeginNormalPaletteFade((0x10000 << sprite->sBattler), 0, 10, 10, RGB(8, 8, 8));
 }
 
-static void SpriteCb_MoveWildMonToRight(struct Sprite *sprite)
+static void SpriteCb_WildMonShowHealthbox(struct Sprite *sprite)
 {
-    if ((gIntroSlideFlags & 1) == 0)
+    if (sprite->animEnded)
     {
-        sprite->x2 += 2;
-        if (sprite->x2 == 0)
-        {
-            sprite->callback = SpriteCb_WildMonShowHealthbox;
-        }
+        StartHealthboxSlideIn(sprite->sBattler);
+        SetHealthboxSpriteVisible(gHealthboxSpriteIds[sprite->sBattler]);
+        sprite->callback = SpriteCb_WildMonAnimate;
+        StartSpriteAnimIfDifferent(sprite, 0);
+        if (WILD_DOUBLE_BATTLE)
+            BeginNormalPaletteFade((0x10000 << sprite->sBattler) | (0x10000 << BATTLE_PARTNER(sprite->sBattler)), 0, 10, 0, RGB(8, 8, 8));
+        else
+            BeginNormalPaletteFade((0x10000 << sprite->sBattler), 0, 10, 0, RGB(8, 8, 8));
     }
 }
 
@@ -2634,7 +2640,10 @@ static void SpriteCb_WildMonShowHealthbox(struct Sprite *sprite)
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[sprite->sBattler]);
         sprite->callback = SpriteCb_WildMonAnimate;
         StartSpriteAnimIfDifferent(sprite, 0);
-        BeginNormalPaletteFade(0x20000, 0, 10, 0, RGB(8, 8, 8));
+        if (WILD_DOUBLE_BATTLE)
+            BeginNormalPaletteFade((0x10000 << sprite->sBattler) | (0x10000 << BATTLE_PARTNER(sprite->sBattler)), 0, 10, 0, RGB(8, 8, 8));
+        else
+            BeginNormalPaletteFade((0x10000 << sprite->sBattler), 0, 10, 0, RGB(8, 8, 8));
     }
 }
 
@@ -3992,6 +4001,12 @@ u8 IsRunningFromBattleImpossible(void)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DONT_LEAVE_BIRCH;
         return 1;
     }
+    if (GetBattlerPosition(gActiveBattler) == B_POSITION_PLAYER_RIGHT && WILD_DOUBLE_BATTLE
+        && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))) // The second pokemon cannot run from a double wild battle, unless it's the only alive mon.
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
+        return 1;
+    }
     return 0;
 }
 
@@ -4075,6 +4090,14 @@ static void HandleTurnActionSelectionState(void)
                         || gBattleMons[gActiveBattler].status2 & STATUS2_RECHARGE)
                     {
                         gChosenActionByBattler[gActiveBattler] = B_ACTION_USE_MOVE;
+                        gBattleCommunication[gActiveBattler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                    }
+                    else if (WILD_DOUBLE_BATTLE
+                             && position == B_POSITION_PLAYER_RIGHT
+                             && (gBattleStruct->throwingPokeBall || gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] == B_ACTION_RUN))
+                    {
+                        gBattleStruct->throwingPokeBall = FALSE;
+                        gChosenActionByBattler[gActiveBattler] = B_ACTION_NOTHING_FAINTED; // Not fainted, but it cannot move, because of the throwing ball.
                         gBattleCommunication[gActiveBattler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                     }
                     else
