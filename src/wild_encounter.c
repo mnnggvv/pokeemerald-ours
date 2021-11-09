@@ -39,9 +39,9 @@ static bool8 IsAbilityAllowingEncounter(u8 level);
 
 // EWRAM vars
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
-EWRAM_DATA static u32 sFeebasRngValue = 0;
 EWRAM_DATA bool8 gIsFishingEncounter = 0;
 EWRAM_DATA bool8 gIsSurfingEncounter = 0;
+EWRAM_DATA static u32 sFeebasRngValue = 0;
 
 #include "data/wild_encounters.h"
 
@@ -515,139 +515,139 @@ static bool8 AreLegendariesInSootopolisPreventingEncounters(void)
 
 bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavior)
 {
-    u16 headerId;
-    struct Roamer *roamer;
+	u16 headerId;
+	struct Roamer* roamer;
 
-    if (sWildEncountersDisabled == TRUE)
-        return FALSE;
+	if (sWildEncountersDisabled == TRUE)
+		return FALSE;
 
-    headerId = GetCurrentMapWildMonHeaderId();
-    if (headerId == 0xFFFF)
-    {
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
-        {
-            headerId = GetBattlePikeWildMonHeaderId();
-            if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
-                return FALSE;
-            else if (DoWildEncounterRateTest(gBattlePikeWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
-                return FALSE;
-            else if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
-                return FALSE;
-            else if (!TryGenerateBattlePikeWildMon(TRUE))
-                return FALSE;
+	headerId = GetCurrentMapWildMonHeaderId();
+	if (headerId == 0xFFFF)
+	{
+		if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+		{
+			headerId = GetBattlePikeWildMonHeaderId();
+			if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
+				return FALSE;
+			else if (DoWildEncounterRateTest(gBattlePikeWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
+				return FALSE;
+			else if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
+				return FALSE;
+			else if (!TryGenerateBattlePikeWildMon(TRUE))
+				return FALSE;
 
-            BattleSetup_StartBattlePikeWildBattle();
-            return TRUE;
-        }
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        {
-            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-            if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
-                return FALSE;
-            else if (DoWildEncounterRateTest(gBattlePyramidWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
-                return FALSE;
-            else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
-                return FALSE;
+			BattleSetup_StartBattlePikeWildBattle();
+			return TRUE;
+		}
+		if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+		{
+			headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+			if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
+				return FALSE;
+			else if (DoWildEncounterRateTest(gBattlePyramidWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
+				return FALSE;
+			else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
+				return FALSE;
 
-            GenerateBattlePyramidWildMon();
-            BattleSetup_StartWildBattle();
-            return TRUE;
-        }
-    }
-    else
-    {
-        if (MetatileBehavior_IsLandWildEncounter(currMetaTileBehavior) == TRUE)
-        {
-            if (gWildMonHeaders[headerId].landMonsInfo == NULL)
-                return FALSE;
-            else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
-                return FALSE;
-            else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
-                return FALSE;
+			GenerateBattlePyramidWildMon();
+			BattleSetup_StartWildBattle();
+			return TRUE;
+		}
+	}
+	else
+	{
+		if (MetatileBehavior_IsLandWildEncounter(currMetaTileBehavior) == TRUE)
+		{
+			if (gWildMonHeaders[headerId].landMonsInfo == NULL)
+				return FALSE;
+			else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
+				return FALSE;
+			else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
+				return FALSE;
 
-            if (TryStartRoamerEncounter() == TRUE)
-            {
-                roamer = &gSaveBlock1Ptr->roamer;
-                if (!IsWildLevelAllowedByRepel(roamer->level))
-                    return FALSE;
+			if (TryStartRoamerEncounter() == TRUE)
+			{
+				roamer = &gSaveBlock1Ptr->roamer;
+				if (!IsWildLevelAllowedByRepel(roamer->level))
+					return FALSE;
 
-                BattleSetup_StartRoamerBattle();
-                return TRUE;
-            }
-            else
-            {
-                if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
-                {
-                    BattleSetup_StartWildBattle();
-                    return TRUE;
-                }
+				BattleSetup_StartRoamerBattle();
+				return TRUE;
+			}
+			else
+			{
+				if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+				{
+					BattleSetup_StartWildBattle();
+					return TRUE;
+				}
 
-                // try a regular wild land encounter
-                if (TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
-                {
-                    if (TryDoDoubleWildBattle())
-                    {
-                        struct Pokemon mon1 = gEnemyParty[0];
-                        TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE);
-                        gEnemyParty[1] = mon1;
-                        BattleSetup_StartDoubleWildBattle();
-                    }
-                    else
-                    {
-                        BattleSetup_StartWildBattle();
-                    }
-                    return TRUE;
-                }
+				// try a regular wild land encounter
+				if (TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+				{
+					if (TryDoDoubleWildBattle())
+					{
+						struct Pokemon mon1 = gEnemyParty[0];
+						TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE);
+						gEnemyParty[1] = mon1;
+						BattleSetup_StartDoubleWildBattle();
+					}
+					else
+					{
+						BattleSetup_StartWildBattle();
+					}
+					return TRUE;
+				}
 
-                return FALSE;
-            }
-        }
-        else if (MetatileBehavior_IsWaterWildEncounter(currMetaTileBehavior) == TRUE
-                 || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridge(currMetaTileBehavior) == TRUE))
-        {
-            if (AreLegendariesInSootopolisPreventingEncounters() == TRUE)
-                return FALSE;
-            else if (gWildMonHeaders[headerId].waterMonsInfo == NULL)
-                return FALSE;
-            else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
-                return FALSE;
-            else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].waterMonsInfo->encounterRate, FALSE) != TRUE)
-                return FALSE;
+				return FALSE;
+			}
+		}
+		else if (MetatileBehavior_IsWaterWildEncounter(currMetaTileBehavior) == TRUE
+			|| (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridge(currMetaTileBehavior) == TRUE))
+		{
+			if (AreLegendariesInSootopolisPreventingEncounters() == TRUE)
+				return FALSE;
+			else if (gWildMonHeaders[headerId].waterMonsInfo == NULL)
+				return FALSE;
+			else if (previousMetaTileBehavior != currMetaTileBehavior && !DoGlobalWildEncounterDiceRoll())
+				return FALSE;
+			else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].waterMonsInfo->encounterRate, FALSE) != TRUE)
+				return FALSE;
 
-            if (TryStartRoamerEncounter() == TRUE)
-            {
-                roamer = &gSaveBlock1Ptr->roamer;
-                if (!IsWildLevelAllowedByRepel(roamer->level))
-                    return FALSE;
+			if (TryStartRoamerEncounter() == TRUE)
+			{
+				roamer = &gSaveBlock1Ptr->roamer;
+				if (!IsWildLevelAllowedByRepel(roamer->level))
+					return FALSE;
 
-                BattleSetup_StartRoamerBattle();
-                return TRUE;
-            }
-            else // try a regular surfing encounter
-            {
-                if (TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
-                {
+				BattleSetup_StartRoamerBattle();
+				return TRUE;
+			}
+			else // try a regular surfing encounter
+			{
+				if (TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+				{
 					gIsSurfingEncounter = TRUE;
-                    if (TryDoDoubleWildBattle())
-                    {
-                        struct Pokemon mon1 = gEnemyParty[0];
-                        TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_KEEN_EYE);
-                        gEnemyParty[1] = mon1;
-                        BattleSetup_StartDoubleWildBattle();
-                    }
-                    else
-                    {
-                        BattleSetup_StartWildBattle();
-                    }
-                    return TRUE;
-                }
+					if (TryDoDoubleWildBattle())
+					{
+						struct Pokemon mon1 = gEnemyParty[0];
+						TryGenerateWildMon(gWildMonHeaders[headerId].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_KEEN_EYE);
+						gEnemyParty[1] = mon1;
+						BattleSetup_StartDoubleWildBattle();
+					}
+					else
+					{
+						BattleSetup_StartWildBattle();
+					}
+					return TRUE;
+				}
 
-                return FALSE;
-            }
-        }
-    }
+				return FALSE;
+			}
+		}
+	}
 
-    return FALSE;
+	return FALSE;
 }
 
 void RockSmashWildEncounter(void)
@@ -946,11 +946,11 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 
 bool8 TryDoDoubleWildBattle(void)
 {
-    if (GetSafariZoneFlag() || GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS)
-        return FALSE;
-    #if B_DOUBLE_WILD_CHANCE != 0
-    else if (B_FLAG_FORCE_DOUBLE_WILD != 0 && FlagGet(B_FLAG_FORCE_DOUBLE_WILD) && (Random() % 100) + 1 < B_DOUBLE_WILD_CHANCE)
-        return TRUE;
-    #endif
-    return FALSE;
+	if (GetSafariZoneFlag() || GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS)
+		return FALSE;
+#if B_DOUBLE_WILD_CHANCE != 0
+	else if (B_FLAG_FORCE_DOUBLE_WILD != 0 && FlagGet(B_FLAG_FORCE_DOUBLE_WILD) && (Random() % 100) + 1 < B_DOUBLE_WILD_CHANCE)
+		return TRUE;
+#endif
+	return FALSE;
 }

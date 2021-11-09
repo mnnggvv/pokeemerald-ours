@@ -1734,12 +1734,12 @@ static void Cmd_attackanimation(void)
     if (gBattleControllerExecFlags)
         return;
 
-    if ((gHitMarker & HITMARKER_NO_ANIMATIONS)
-        && gCurrentMove != MOVE_TRANSFORM
-        && gCurrentMove != MOVE_SUBSTITUTE
-        // In a wild double battle gotta use the teleport animation if two wild pokemon are alive.
-        && !(gCurrentMove == MOVE_TELEPORT && WILD_DOUBLE_BATTLE && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))))
-    {
+	if ((gHitMarker & HITMARKER_NO_ANIMATIONS)
+		&& gCurrentMove != MOVE_TRANSFORM
+		&& gCurrentMove != MOVE_SUBSTITUTE
+		// In a wild double battle gotta use the teleport animation if two wild pokemon are alive.
+		&& !(gCurrentMove == MOVE_TELEPORT && WILD_DOUBLE_BATTLE && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))))
+	{
         BattleScriptPush(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = BattleScript_Pausex20;
         gBattleScripting.animTurn++;
@@ -6271,21 +6271,21 @@ static void Cmd_various(void)
 
     switch (gBattlescriptCurrInstr[2])
     {
-        // Roar will fail in a double wild battle when used by the player against one of the two alive wild mons.
-    // Also when an opposing wild mon uses it againt its partner.
-    case VARIOUS_JUMP_IF_ROAR_FAILS:
-        if (WILD_DOUBLE_BATTLE
-            && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
-            && GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
-            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
-            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
-        else if (WILD_DOUBLE_BATTLE
-                 && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
-                 && GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT)
-            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
-        else
-            gBattlescriptCurrInstr += 7;
-        return;
+		// Roar will fail in a double wild battle when used by the player against one of the two alive wild mons.
+			// Also when an opposing wild mon uses it againt its partner.
+	case VARIOUS_JUMP_IF_ROAR_FAILS:
+		if (WILD_DOUBLE_BATTLE
+			&& GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
+			&& GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
+			&& IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+			gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
+		else if (WILD_DOUBLE_BATTLE
+			&& GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
+			&& GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT)
+			gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 3);
+		else
+			gBattlescriptCurrInstr += 7;
+		return;
     case VARIOUS_CANCEL_MULTI_TURN_MOVES:
         CancelMultiTurnMoves(gActiveBattler);
         break;
@@ -7146,175 +7146,166 @@ static bool8 TryDoForceSwitchOut(void)
 
 static void Cmd_forcerandomswitch(void)
 {
-    s32 i;
-    s32 battler1PartyId = 0;
-    s32 battler2PartyId = 0;
+	s32 i;
+	s32 battler1PartyId = 0;
+	s32 battler2PartyId = 0;
 
-    s32 firstMonId;
-    s32 lastMonId = 0; // + 1
-    s32 monsCount;
-    struct Pokemon* party = NULL;
-    s32 validMons = 0;
-    s32 minNeeded;
+	s32 firstMonId;
+	s32 lastMonId = 0; // + 1
+	s32 monsCount;
+	struct Pokemon* party = NULL;
+	s32 validMons = 0;
+	s32 minNeeded;
 
-    // Swapping pokemon happens in:
-    // trainer battles
-    // wild double battles when an opposing pokemon uses it against one of the two alive player mons
-    // wild double battle when a player pokemon uses it against its partner
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-        || (WILD_DOUBLE_BATTLE
-            && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
-            && GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER
-            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
-        || (WILD_DOUBLE_BATTLE
-            && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
-            && GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
-       )
-    {
-        if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
-            party = gPlayerParty;
-        else
-            party = gEnemyParty;
+	if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+		|| (WILD_DOUBLE_BATTLE
+			&& GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT
+			&& GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER
+			&& IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+		|| (WILD_DOUBLE_BATTLE
+			&& GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER
+			&& GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
+		)
+	{
+		if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
+			party = gPlayerParty;
+		else
+			party = gEnemyParty;
 
-        if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_LINK)
-            || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-            || (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
-        {
-            if ((gBattlerTarget & BIT_FLANK) != 0)
-            {
-                firstMonId = 3;
-                lastMonId = 6;
-            }
-            else
-            {
-                firstMonId = 0;
-                lastMonId = 3;
-            }
-            monsCount = 3;
-            minNeeded = 1;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
-        }
-        else if ((gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
-                 || (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK))
-        {
-            if (GetLinkTrainerFlankId(GetBattlerMultiplayerId(gBattlerTarget)) == 1)
-            {
-                firstMonId = 3;
-                lastMonId = 6;
-            }
-            else
-            {
-                firstMonId = 0;
-                lastMonId = 3;
-            }
-            monsCount = 3;
-            minNeeded = 1;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
-        }
-        else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-        {
-            if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
-            {
-                firstMonId = 0;
-                lastMonId = 6;
-                monsCount = 6;
-                minNeeded = 2; // since there are two opponents, it has to be a double battle
-            }
-            else
-            {
-                if ((gBattlerTarget & BIT_FLANK) != 0)
-                {
-                    firstMonId = 3;
-                    lastMonId = 6;
-                }
-                else
-                {
-                    firstMonId = 0;
-                    lastMonId = 3;
-                }
-                monsCount = 3;
-                minNeeded = 1;
-            }
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
-        }
-        else if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
-        {
-            firstMonId = 0;
-            lastMonId = 6;
-            monsCount = 6;
-            minNeeded = 2;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
-        }
-        else
-        {
-            firstMonId = 0;
-            lastMonId = 6;
-            monsCount = 6;
-            minNeeded = 1;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget]; // there is only one pokemon out in single battles
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget];
-        }
+		if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_LINK)
+			|| (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+			|| (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
+		{
+			if ((gBattlerTarget & BIT_FLANK) != 0)
+			{
+				firstMonId = 3;
+				lastMonId = 6;
+			}
+			else
+			{
+				firstMonId = 0;
+				lastMonId = 3;
+			}
+			monsCount = 3;
+			minNeeded = 1;
+			battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
+			battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
+		}
+		else if ((gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
+			|| (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK))
+		{
+			if (GetLinkTrainerFlankId(GetBattlerMultiplayerId(gBattlerTarget)) == 1)
+			{
+				firstMonId = 3;
+				lastMonId = 6;
+			}
+			else
+			{
+				firstMonId = 0;
+				lastMonId = 3;
+			}
+			monsCount = 3;
+			minNeeded = 1;
+			battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
+			battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
+		}
+		else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+		{
+			if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
+			{
+				firstMonId = 0;
+				lastMonId = 6;
+				monsCount = 6;
+				minNeeded = 2; // since there are two opponents, it has to be a double battle
+			}
+			else
+			{
+				if ((gBattlerTarget & BIT_FLANK) != 0)
+				{
+					firstMonId = 3;
+					lastMonId = 6;
+				}
+				else
+				{
+					firstMonId = 0;
+					lastMonId = 3;
+				}
+				monsCount = 3;
+				minNeeded = 1;
+			}
+			battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
+			battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
+		}
+		else if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+		{
+			firstMonId = 0;
+			lastMonId = 6;
+			monsCount = 6;
+			minNeeded = 2;
+			battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
+			battler1PartyId = gBattlerPartyIndexes[gBattlerTarget ^ BIT_FLANK];
+		}
+		else
+		{
+			firstMonId = 0;
+			lastMonId = 6;
+			monsCount = 6;
+			minNeeded = 1;
+			battler2PartyId = gBattlerPartyIndexes[gBattlerTarget]; // there is only one pokemon out in single battles
+			battler1PartyId = gBattlerPartyIndexes[gBattlerTarget];
+		}
 
-        for (i = firstMonId; i < lastMonId; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0)
-             {
-                 validMons++;
-             }
-        }
+		for (i = firstMonId; i < lastMonId; i++)
+		{
+			if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
+				&& !GetMonData(&party[i], MON_DATA_IS_EGG)
+				&& GetMonData(&party[i], MON_DATA_HP) != 0)
+			{
+				validMons++;
+			}
+		}
 
-        if (validMons <= minNeeded)
-        {
-            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
-        }
-        else
-        {
-            *(gBattleStruct->field_58 + gBattlerTarget) = gBattlerPartyIndexes[gBattlerTarget];
-            gBattlescriptCurrInstr = BattleScript_RoarSuccessSwitch;
+		if (validMons <= minNeeded)
+		{
+			gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
+		}
+		else
+		{
+			if (TryDoForceSwitchOut())
+			{
+				do
+				{
+					do
+					{
+						i = Random() % monsCount;
+						i += firstMonId;
+					} while (i == battler2PartyId || i == battler1PartyId);
+				} while (GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
+					|| GetMonData(&party[i], MON_DATA_IS_EGG) == TRUE
+					|| GetMonData(&party[i], MON_DATA_HP) == 0); //should be one while loop, but that doesn't match.
+			}
+			*(gBattleStruct->monToSwitchIntoId + gBattlerTarget) = i;
 
-            do
-            {
-                i = Random() % monsCount;
-                i += firstMonId;
-            }
-            while (i == battler2PartyId
-                   || i == battler1PartyId
-                   || GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
-                   || GetMonData(&party[i], MON_DATA_IS_EGG) == TRUE
-                   || GetMonData(&party[i], MON_DATA_HP) == 0);
+			if (!IsMultiBattle())
+				SwitchPartyOrder(gBattlerTarget);
 
-            *(gBattleStruct->monToSwitchIntoId + gBattlerTarget) = i;
+			if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+				|| (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+				|| (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+				|| (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
+			{
+				SwitchPartyOrderLinkMulti(gBattlerTarget, i, 0);
+				SwitchPartyOrderLinkMulti(gBattlerTarget ^ BIT_FLANK, i, 1);
+			}
 
-            if (!IsMultiBattle())
-                SwitchPartyOrder(gBattlerTarget);
-
-            if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-                || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                || (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-                || (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
-            {
-                SwitchPartyOrderLinkMulti(gBattlerTarget, i, 0);
-                SwitchPartyOrderLinkMulti(gBattlerTarget ^ BIT_FLANK, i, 1);
-            }
-
-            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-                SwitchPartyOrderInGameMulti(gBattlerTarget, i);
-        }
-    }
-    else
-    {
-        // In normal wild doubles, Roar will always fail if the user's level is less than the target's.
-        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
-            gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
-        else
-            gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
-    }
+			if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+				SwitchPartyOrderInGameMulti(gBattlerTarget, i);
+		}
+	}
+	else
+	{
+		TryDoForceSwitchOut();
+	}
 }
 
 static void Cmd_tryconversiontypechange(void) // randomly changes user's type to one of its moves' type
@@ -9787,6 +9778,14 @@ static void Cmd_removelightscreenreflect(void) // brick break
     gBattlescriptCurrInstr++;
 }
 
+static u8 GetCatchingBattler(void)
+{
+	if (IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
+		return GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+	else
+		return GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+}
+
 static void Cmd_handleballthrow(void)
 {
     u8 ballMultiplier = 0;
@@ -9795,7 +9794,7 @@ static void Cmd_handleballthrow(void)
         return;
 
     gActiveBattler = gBattlerAttacker;
-    gBattlerTarget = gBattlerAttacker ^ BIT_SIDE;
+    gBattlerTarget = GetCatchingBattler();
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
@@ -9937,18 +9936,18 @@ static void Cmd_handleballthrow(void)
 
 static void Cmd_givecaughtmon(void)
 {
-    if (GiveMonToPlayer(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]]) != MON_GIVEN_TO_PARTY)
+    if (GiveMonToPlayer(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]]) != MON_GIVEN_TO_PARTY)
     {
         if (!ShouldShowBoxWasFullMessage())
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SENT_SOMEONES_PC;
             StringCopy(gStringVar1, GetBoxNamePtr(VarGet(VAR_PC_BOX_TO_SEND_MON)));
-            GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gStringVar2);
+            GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_NICKNAME, gStringVar2);
         }
         else
         {
             StringCopy(gStringVar1, GetBoxNamePtr(VarGet(VAR_PC_BOX_TO_SEND_MON))); // box the mon was sent to
-            GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gStringVar2);
+            GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_NICKNAME, gStringVar2);
             StringCopy(gStringVar3, GetBoxNamePtr(GetPCBoxToSendMon())); //box the mon was going to be sent to
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SOMEONES_BOX_FULL;
         }
@@ -9958,17 +9957,17 @@ static void Cmd_givecaughtmon(void)
             gBattleCommunication[MULTISTRING_CHOOSER]++;
     }
 
-    gBattleResults.caughtMonSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_SPECIES, NULL);
-    GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
-    gBattleResults.caughtMonBall = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_POKEBALL, NULL);
+    gBattleResults.caughtMonSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_SPECIES, NULL);
+    GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
+    gBattleResults.caughtMonBall = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_POKEBALL, NULL);
 
     gBattlescriptCurrInstr++;
 }
 
 static void Cmd_trysetcaughtmondexflags(void)
 {
-    u16 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL);
-    u32 personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL);
+    u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_SPECIES, NULL);
+    u32 personality = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_PERSONALITY, NULL);
 
     if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
     {
@@ -9983,7 +9982,7 @@ static void Cmd_trysetcaughtmondexflags(void)
 
 static void Cmd_displaydexinfo(void)
 {
-    u16 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL);
+    u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_SPECIES, NULL);
 
     switch (gBattleCommunication[0])
     {
@@ -10148,13 +10147,13 @@ static void Cmd_trygivecaughtmonnick(void)
     case 2:
         if (!gPaletteFade.active)
         {
-            GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
+            GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
             FreeAllWindowBuffers();
 
             DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
-                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_SPECIES),
-                           GetMonGender(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]]),
-                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_PERSONALITY, NULL),
+                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_SPECIES),
+                           GetMonGender(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]]),
+                           GetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_PERSONALITY, NULL),
                            BattleMainCB2);
 
             gBattleCommunication[MULTIUSE_STATE]++;
@@ -10163,7 +10162,7 @@ static void Cmd_trygivecaughtmonnick(void)
     case 3:
         if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active )
         {
-            SetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
+            SetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
             gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
         }
         break;

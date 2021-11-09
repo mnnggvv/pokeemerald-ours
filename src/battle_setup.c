@@ -403,23 +403,23 @@ void BattleSetup_StartBattlePikeWildBattle(void)
 
 static void DoStandardWildBattle(bool32 isDouble)
 {
-    ScriptContext2_Enable();
-    FreezeObjectEvents();
-    sub_808BCF4();
-    gMain.savedCallback = CB2_EndWildBattle;
-    gBattleTypeFlags = 0;
-    if (isDouble)
-        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-    if (InBattlePyramid())
-    {
-        VarSet(VAR_TEMP_E, 0);
-        gBattleTypeFlags |= BATTLE_TYPE_PYRAMID;
-    }
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
-    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
-    IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    IncrementDailyWildBattles();
-    TryUpdateGymLeaderRematchFromWild();
+	ScriptContext2_Enable();
+	FreezeObjectEvents();
+	sub_808BCF4();
+	gMain.savedCallback = CB2_EndWildBattle;
+	gBattleTypeFlags = 0;
+	if (isDouble)
+		gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+	if (InBattlePyramid())
+	{
+		VarSet(VAR_TEMP_E, 0);
+		gBattleTypeFlags |= BATTLE_TYPE_PYRAMID;
+	}
+	CreateBattleStartTask(GetWildBattleTransition(), 0);
+	IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+	IncrementGameStat(GAME_STAT_WILD_BATTLES);
+	IncrementDailyWildBattles();
+	TryUpdateGymLeaderRematchFromWild();
 }
 
 void BattleSetup_StartRoamerBattle(void)

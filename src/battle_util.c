@@ -445,31 +445,32 @@ bool8 TryRunFromBattle(u8 battler)
     {
         effect++;
     }
-    else
-    {
-        if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
-        {
-            if (InBattlePyramid())
-            {
-                pyramidMultiplier = GetPyramidRunMultiplier();
-                speedVar = (gBattleMons[battler].speed * pyramidMultiplier) / (gBattleMons[BATTLE_OPPOSITE(battler)].speed) + (gBattleStruct->runTries * 30);
-                if (speedVar > (Random() & 0xFF))
-                    effect++;
-            }
-            else if (gBattleMons[battler].speed < gBattleMons[BATTLE_OPPOSITE(battler)].speed)
-            {
-                speedVar = (gBattleMons[battler].speed * 128) / (gBattleMons[BATTLE_OPPOSITE(battler)].speed) + (gBattleStruct->runTries * 30);
-                if (speedVar > (Random() & 0xFF))
-                    effect++;
-            }
-            else // same speed or faster
-            {
-                effect++;
-            }
-        }
+	else
+	{
+		u8 runningFromBattler = BATTLE_OPPOSITE(battler);
+		if (!IsBattlerAlive(runningFromBattler))
+			runningFromBattler |= BIT_FLANK;
 
-        gBattleStruct->runTries++;
-    }
+		if (InBattlePyramid())
+		{
+			pyramidMultiplier = GetPyramidRunMultiplier();
+			speedVar = (gBattleMons[battler].speed * pyramidMultiplier) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
+			if (speedVar > (Random() & 0xFF))
+				effect++;
+		}
+		else if (gBattleMons[battler].speed < gBattleMons[runningFromBattler].speed)
+		{
+			speedVar = (gBattleMons[battler].speed * 128) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
+			if (speedVar > (Random() & 0xFF))
+				effect++;
+		}
+		else // same speed or faster
+		{
+			effect++;
+		}
+
+		gBattleStruct->runTries++;
+	}
 
     if (effect)
     {
@@ -4109,4 +4110,16 @@ u8 IsMonDisobedient(void)
             return 1;
         }
     }
+}
+
+bool32 IsBattlerAlive(u8 battlerId)
+{
+	if (gBattleMons[battlerId].hp == 0)
+		return FALSE;
+	else if (battlerId >= gBattlersCount)
+		return FALSE;
+	else if (gAbsentBattlerFlags & gBitTable[battlerId])
+		return FALSE;
+	else
+		return TRUE;
 }
